@@ -74,6 +74,7 @@ export default {
   background-color: #ffffff;
   border-radius: 7px;
   padding-top: 0px;
+  width: 86%;
 }
 
 .h-25 { height: 25px;}
