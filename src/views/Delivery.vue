@@ -17,25 +17,26 @@
                 <div class="row">
                     <div class="column">
                         <div class="wrapper-input">
-                            <input v-model="user.email" @input="onChange($event)" type="text" name="email" class="inputText md-box" required autocomplete="off"/>
+                            <input v-model="user.email" @input="onChange($event)" type="text" name="email" :class="['input-text md-box', isEmailValid()]" required autocomplete="off"/>
                             <label class="float-label">Email</label>
                         </div>
                         <div class="wrapper-input">
-                            <input v-model="user.phone" @input="onChange($event)" type="number" class="inputText md-box" name="phone" required autocomplete="off"/>
+                            <input v-model="user.phone" @input="onChange($event)" type="number" :class="['input-text md-box', isPhoneValid()]" name="phone" required autocomplete="off"/>
                             <label class="float-label">Phone Number</label>
                         </div>
                         <div class="wrapper-input">
-                            <input v-model="user.address" @input="onChange($event)" type="text" name="address" class="inputText lg-box" required autocomplete="off"/>
+                            <textarea v-model="user.address" @input="onChange($event)" type="text" name="address" class="input-text lg-box" required autocomplete="off"/>
                             <label class="float-label">Delivery Address</label>
+                            <p v-if="user.address.length > 0 || user.address.length < 120 ">{{120 - $data.user.address.length}} characters left</p>
                         </div>
                     </div>
                     <div class="column">
                         <div class="wrapper-input">
-                            <input v-model="user.dropshiperName" @input="onChange($event)" type="text" name="dropshiperName" class="inputText md-box-2" :disabled="!isChecked" required autocomplete="off"/>
+                            <input v-model="user.dropshiperName" @input="onChange($event)" type="text" name="dropshiperName" class="input-text md-box-2" :disabled="!isChecked" required autocomplete="off"/>
                             <label class="float-label">Dropshipper name</label>
                         </div>
                         <div class="wrapper-input">
-                            <input v-model="user.dropshiperPhone" @input="onChange($event)" type="number" name="dropshiperPhone" class="inputText md-box-2" :disabled="!isChecked" required autocomplete="off"/>
+                            <input v-model="user.dropshiperPhone" @input="onChange($event)" type="number" name="dropshiperPhone" class="input-text md-box-2" :disabled="!isChecked" required autocomplete="off"/>
                             <label class="float-label">Dropshipper phone number</label>
                         </div>
                     </div>
@@ -81,20 +82,12 @@ export default {
     },
     payload: {}
   }),
-  mounted: function () {
-    /*
-     * The "data-apartments" could come from serverside (already saved apartments)
-     */
-    this.payload = JSON.parse(this.$el.dataset.payload)
-  },
   methods: {
     onChange: function (event) {
       const { value, name, checked } = event.target
       this[name] = value
 
       if (name === 'check-box') {
-        console.log(name)
-        console.log(checked)
         if (checked === true) {
           this.user.fee = '5,900'
           this.user.cost = '509,500'
@@ -113,6 +106,15 @@ export default {
         dropshiperPhone: this.dropshiperPhone
       }
       console.log(payload)
+    },
+    isEmailValid: function () {
+      const emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/
+      return (this.user.email === '') ? '' : (emailRegex.test(this.user.email)) ? 'has-success' : 'has-error'
+    },
+    isPhoneValid: function () {
+      const phoneRegex = /^(^\+62|62|^08)(\d{3,4}-?){2}\d{3,4}$/
+      const phone = this.user.phone
+      return (phone === '') ? '' : (phoneRegex.test(phone)) && (phone.length >= 6 || phone.length <= 20) ? 'has-success' : 'has-error'
     }
   }
 }
@@ -129,6 +131,7 @@ export default {
   background-color: #ffffff;
   border-radius: 7px;
   padding-top: 0px;
+  width: 86%;
 }
 
 .f-bold { font-weight: bold;}
@@ -354,11 +357,22 @@ padding: 4px 8px;
   margin-top: 0px;
 }
 
-.inputText {
+.input-text {
   font-size: 14px;
   width: 200px;
   height: 35px;
   border: 1px solid #cecece;
+}
+
+.has-success {
+  border: 1px solid #1BD97B;
+  border-bottom: 3px solid #1BD97B;
+}
+
+.has-error,
+.has-error:focus {
+  border: 1px solid #FF8A00;
+  border-bottom: 3px solid #FF8A00;
 }
 
 .float-label {
@@ -370,7 +384,9 @@ padding: 4px 8px;
 }
 
 input:focus ~ .float-label,
-input:not(:focus):valid ~ .float-label{
+input:not(:focus):valid ~ .float-label,
+textarea:focus ~ .float-label,
+textarea:not(:focus):valid ~ .float-label{
   top: 8px;
   bottom: 10px;
   left: 15px;
