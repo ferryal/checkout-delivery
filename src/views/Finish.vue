@@ -12,7 +12,7 @@
                         <div class="title">
                             <h1 class="flex-item">Thank you</h1>
                         </div>
-                        <div class="f-bold"><p>Order ID: XXIWN</p></div>
+                        <div class="f-bold"><p>Order ID: {{$data.code}}</p></div>
                         <div class="m-top-5 m-bottom-30">Your order will be delivered today with GO-SEND</div>
                         <div class="c-pointer"><i class="fa fa-angle-left m-right-15" aria-hidden="true" /><span>Go to Homepage</span></div>
                     </div>
@@ -55,7 +55,11 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
-  }
+  },
+  data: () => ({
+    code: Math.random().toString(36).substr(2, 5).toUpperCase()
+  })
+
 }
 </script>
 
