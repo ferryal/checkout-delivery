@@ -10,32 +10,32 @@
                 <div class="title">
                     <h1>Delivery Detail</h1>
                     <span class="checkbox">
-                        <input type="checkbox" id="check-box" name="check-box" class="" />
+                        <input type="checkbox" id="check-box" name="check-box" class="" v-model="isChecked" @change="onChange($event)"/>
                         <label for="check-box" class="">Send as dropshipper</label>
                     </span>
                 </div>
                 <div class="row">
                     <div class="column">
                         <div class="wrapper-input">
-                            <input type="text" class="inputText md-box" required/>
+                            <input v-model="user.email" @input="onChange($event)" type="text" name="email" class="inputText md-box" required autocomplete="off"/>
                             <label class="float-label">Email</label>
                         </div>
                         <div class="wrapper-input">
-                            <input type="text" class="inputText md-box" required/>
+                            <input v-model="user.phone" @input="onChange($event)" type="number" class="inputText md-box" name="phone" required autocomplete="off"/>
                             <label class="float-label">Phone Number</label>
                         </div>
                         <div class="wrapper-input">
-                            <input type="text" class="inputText lg-box" required/>
+                            <input v-model="user.address" @input="onChange($event)" type="text" name="address" class="inputText lg-box" required autocomplete="off"/>
                             <label class="float-label">Delivery Address</label>
                         </div>
                     </div>
                     <div class="column">
                         <div class="wrapper-input">
-                            <input type="text" class="inputText md-box-2" required/>
+                            <input v-model="user.dropshiperName" @input="onChange($event)" type="text" name="dropshiperName" class="inputText md-box-2" :disabled="!isChecked" required autocomplete="off"/>
                             <label class="float-label">Dropshipper name</label>
                         </div>
                         <div class="wrapper-input">
-                            <input type="text" class="inputText md-box-2" required/>
+                            <input v-model="user.dropshiperPhone" @input="onChange($event)" type="number" name="dropshiperPhone" class="inputText md-box-2" :disabled="!isChecked" required autocomplete="off"/>
                             <label class="float-label">Dropshipper phone number</label>
                         </div>
                     </div>
@@ -43,18 +43,18 @@
             </div>
             <div class="column-2">
                 <h2>Summary</h2>
-                <p>10 items purchased</p>
+                <p>{{$data.user.items}} items purchased</p>
                 <div class="summary">
                     <div class="d-flex">
-                        <p>Cost of goods</p><p class="f-bold">500,000</p>
+                        <p>Cost of goods</p><p class="f-bold">{{$data.user.cost}}</p>
                     </div>
                     <div class="d-flex">
-                        <p>Dropshipping Fee</p><p class="f-bold">5,900</p>
+                        <p>Dropshipping Fee</p><p class="f-bold">{{$data.user.fee}}</p>
                     </div>
                     <div class="d-flex summary-total">
-                        <p>Total</p><p>505,900</p>
+                        <p>Total</p><p>{{$data.user.cost}}</p>
                     </div>
-                    <button class="btn-payment">Continue to Payment</button>
+                    <button class="btn-payment" v-on:click.prevent="submitForm">Continue to Payment</button>
                 </div>
             </div>
         </div>
@@ -66,6 +66,54 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data: () => ({
+    isChecked: false,
+    user: {
+      email: '',
+      phone: '',
+      address: '',
+      dropshiperName: '',
+      dropshiperPhone: '',
+      items: 10,
+      cost: '500,000',
+      fee: '0'
+    },
+    payload: {}
+  }),
+  mounted: function () {
+    /*
+     * The "data-apartments" could come from serverside (already saved apartments)
+     */
+    this.payload = JSON.parse(this.$el.dataset.payload)
+  },
+  methods: {
+    onChange: function (event) {
+      const { value, name, checked } = event.target
+      this[name] = value
+
+      if (name === 'check-box') {
+        console.log(name)
+        console.log(checked)
+        if (checked === true) {
+          this.user.fee = '5,900'
+          this.user.cost = '509,500'
+        } else {
+          this.user.fee = '0'
+          this.user.cost = '500,000'
+        }
+      }
+    },
+    submitForm: function () {
+      const payload = {
+        email: this.email,
+        phone: this.phone,
+        address: this.address,
+        dropshiperName: this.dropshiperName,
+        dropshiperPhone: this.dropshiperPhone
+      }
+      console.log(payload)
+    }
   }
 }
 </script>
