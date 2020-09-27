@@ -191,6 +191,8 @@ export default {
   color: #FF8A00;
   float: left;
   font-weight: bold;
+  font-size: 2.5em !important;
+  border-bottom: 4px solid #cecece;
 }
 
 .column-10 .title span {
@@ -405,14 +407,14 @@ export default {
 }
 
 .has-success {
-  border: 1px solid #1BD97B;
+  border: 2px solid #1BD97B;
   border-bottom: 3px solid #1BD97B;
 }
 
 .has-error,
 .has-error:focus {
-  border: 1px solid #FF8A00;
-  border-bottom: 3px solid #FF8A00;
+  border: 2px solid #FF8A00;
+  border-bottom: 4px solid #FF8A00;
 }
 
 .float-label {
@@ -434,4 +436,20 @@ textarea:not(:focus):valid ~ .float-label{
   opacity: 1;
 }
 
+@media (max-width: 768px) {
+  .container {
+    margin-top: 20px;
+    margin-left: 0px;
+    padding: 1.5rem;
+    padding-top: 0px;
+  }
+  .container .wrapper-progress {
+    margin-left: 0px;
+  }
+  .wrapper-input,
+  .wrapper-input .md-box,
+  .wrapper-input .lg-box {
+    width: 300px;
+  }
+}
 </style>

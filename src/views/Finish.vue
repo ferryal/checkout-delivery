@@ -281,4 +281,16 @@ padding: 4px 8px;
   margin-top: 0px;
 }
 
+@media (max-width: 768px) {
+  .container {
+    margin-top: 20px;
+    margin-left: 0px;
+    padding: 1.5rem;
+    padding-top: 0px;
+  }
+  .container .wrapper-progress {
+    margin-left: 0px;
+  }
+}
+
 </style>

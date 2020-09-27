@@ -171,6 +171,8 @@ export default {
   color: #FF8A00;
   float: left;
   font-weight: bold;
+  font-size: 2.5em;
+  border-bottom: 4px solid #cecece;
 }
 
 .column-10 .title span {
@@ -343,8 +345,6 @@ input:not(:focus):valid ~ .float-label{
 
 .four { width: 180px; max-width: 180px;}
 
-/* COLUMNS */
-
 .col {
   display: block;
   float:left;
@@ -352,8 +352,6 @@ input:not(:focus):valid ~ .float-label{
 }
 
 .col:first-of-type { margin-left: 0; }
-
-/* CLEARFIX */
 
 .cf:before,
 .cf:after {
@@ -382,9 +380,6 @@ input:not(:focus):valid ~ .float-label{
 
 .form label{
   position: relative;
-  /* color: #fff; */
-  /* background-color: #aaa; */
-  /* font-size: 26px; */
   text-align: left;
   height: 60px;
   line-height: 20px;
@@ -407,8 +402,6 @@ input:not(:focus):valid ~ .float-label{
 }
 
 .form .plan input:checked + label, .form .payment-plan input:checked + label, .form .payment-type input:checked + label{
-  /* border: 3px solid #333; */
-  /* background-color: #2fcc71; */
   background: rgba(27,217,123,0.10);
   border: 2px solid #1BD97B;
   font-family: Helvetica;
@@ -416,14 +409,6 @@ input:not(:focus):valid ~ .float-label{
   color: #1BD97B;
   letter-spacing: 0;
   opacity: 0.8;
-  /* font-family: Helvetica;
-  font-size: 13px;
-  color: #000000;
-  letter-spacing: 0;
-  font-family: Helvetica;
-  font-size: 16px;
-  color: #2D2A40;
-  letter-spacing: 0; */
 }
 
 .form .plan input:checked + label:after, form .payment-plan input:checked + label:after, .form .payment-type input:checked + label:after{
@@ -436,7 +421,6 @@ input:not(:focus):valid ~ .float-label{
   position: absolute;
   top: -6px;
   right: -15px;
-
 }
 
 .submit{
@@ -456,6 +440,23 @@ input:not(:focus):valid ~ .float-label{
 .submit:hover{
   cursor: pointer;
   transform: rotateX(360deg);
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-top: 20px;
+    margin-left: 0px;
+    padding: 1.5rem;
+    padding-top: 0px;
+  }
+  .container .wrapper-progress {
+    margin-left: 0px;
+  }
+  .wrapper-input,
+  .wrapper-input .md-box,
+  .wrapper-input .lg-box {
+    width: 300px;
+  }
 }
 
 </style>
