@@ -25,9 +25,9 @@
                             <label class="float-label">Phone Number</label>
                         </div>
                         <div class="wrapper-input">
-                            <textarea v-model="user.address" @input="onChange($event)" type="text" name="address" class="input-text lg-box" required autocomplete="off"/>
+                            <textarea v-model="user.address" @input="onChange($event)" type="text" name="address" class="input-text lg-box" required autocomplete="off" :disabled="user.address.length >= 120"/>
                             <label class="float-label">Delivery Address</label>
-                            <p v-if="user.address.length > 0 || user.address.length < 120 ">{{120 - $data.user.address.length}} characters left</p>
+                            <p v-if="user.address.length > 0">{{120 - $data.user.address.length}} characters left</p>
                         </div>
                     </div>
                     <div class="column">
@@ -36,7 +36,7 @@
                             <label class="float-label">Dropshipper name</label>
                         </div>
                         <div class="wrapper-input">
-                            <input v-model="user.dropshiperPhone" @input="onChange($event)" type="number" name="dropshiperPhone" class="input-text md-box-2" :disabled="!isChecked" required autocomplete="off"/>
+                            <input v-model="user.dropshiperPhone" @input="onChange($event)" type="number" name="dropshiperPhone" :class="['input-text md-box-2', isPhoneDropshipperValid()]" :disabled="!isChecked" required autocomplete="off"/>
                             <label class="float-label">Dropshipper phone number</label>
                         </div>
                     </div>
@@ -47,15 +47,15 @@
                 <p>{{$data.user.items}} items purchased</p>
                 <div class="summary">
                     <div class="d-flex">
-                        <p>Cost of goods</p><p class="f-bold">{{$data.user.cost}}</p>
+                        <p>Cost of goods</p><p class="f-bold">{{parseInt(detail.cost).toLocaleString()}}</p>
                     </div>
                     <div class="d-flex">
-                        <p>Dropshipping Fee</p><p class="f-bold">{{$data.user.fee}}</p>
+                        <p>Dropshipping Fee</p><p class="f-bold">{{parseInt($data.user.fee).toLocaleString()}}</p>
                     </div>
                     <div class="d-flex summary-total">
-                        <p>Total</p><p>{{$data.user.cost}}</p>
+                        <p>Total</p><p>{{parseInt($data.user.cost).toLocaleString()}}</p>
                     </div>
-                    <button class="btn-payment" v-on:click.prevent="submitForm">Continue to Payment</button>
+                    <button class="btn-payment" @click="submitForm" :disabled="user.email === '' || user.phone === ''|| user.number === ''">Continue to Payment</button>
                 </div>
             </div>
         </div>
@@ -63,8 +63,10 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex'
+
 export default {
-  name: 'HelloWorld',
+  name: 'Delivery',
   props: {
     msg: String
   },
@@ -77,11 +79,19 @@ export default {
       dropshiperName: '',
       dropshiperPhone: '',
       items: 10,
-      cost: '500,000',
+      cost: 500000,
       fee: '0'
     },
     payload: {}
   }),
+  computed: {
+    ...mapState({
+      detail: 'checkoutDetail'
+    }),
+    ...mapGetters({
+      detail: 'checkoutDetail'
+    })
+  },
   methods: {
     onChange: function (event) {
       const { value, name, checked } = event.target
@@ -89,23 +99,31 @@ export default {
 
       if (name === 'check-box') {
         if (checked === true) {
-          this.user.fee = '5,900'
-          this.user.cost = '509,500'
+          this.user.fee = 5900
+          this.user.cost = 509500
         } else {
-          this.user.fee = '0'
-          this.user.cost = '500,000'
+          this.user.fee = 0
+          this.user.cost = 500000
         }
       }
     },
     submitForm: function () {
       const payload = {
-        email: this.email,
-        phone: this.phone,
-        address: this.address,
-        dropshiperName: this.dropshiperName,
-        dropshiperPhone: this.dropshiperPhone
+        fee: this.user.fee
       }
-      console.log(payload)
+      const emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/
+      const phoneRegex = /^(^\+62|62|^08)(\d{3,4}-?){2}\d{3,4}$/
+
+      if (this.isChecked === true && phoneRegex.test(this.user.phone)) {
+        alert('Submit error')
+      }
+
+      if (emailRegex.test(this.user.email) && phoneRegex.test(this.user.phone)) {
+        this.$store.commit('addProduct', payload)
+        this.$router.push('Payment')
+      } else {
+        alert('Submit error')
+      }
     },
     isEmailValid: function () {
       const emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/
@@ -114,6 +132,11 @@ export default {
     isPhoneValid: function () {
       const phoneRegex = /^(^\+62|62|^08)(\d{3,4}-?){2}\d{3,4}$/
       const phone = this.user.phone
+      return (phone === '') ? '' : (phoneRegex.test(phone)) && (phone.length >= 6 || phone.length <= 20) ? 'has-success' : 'has-error'
+    },
+    isPhoneDropshipperValid: function () {
+      const phoneRegex = /^(^\+62|62|^08)(\d{3,4}-?){2}\d{3,4}$/
+      const phone = this.user.dropshiperPhone
       return (phone === '') ? '' : (phoneRegex.test(phone)) && (phone.length >= 6 || phone.length <= 20) ? 'has-success' : 'has-error'
     }
   }
@@ -188,18 +211,28 @@ export default {
 }
 
 .wrapper-input .md-box {
-  height: 60px;
+  height: 50px;
   width: 400px;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .wrapper-input .lg-box {
-  height: 120px;
+  height: 90px;
   width: 400px;
+  max-width: 400px;
+  padding-top: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .wrapper-input .md-box-2 {
-  height: 60px;
-  width: 300px;
+  height: 50px;
+  width: 260px;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .summary {
@@ -305,17 +338,24 @@ export default {
 .container .wrapper-progress .progress-delivery span,
 .container .wrapper-progress .payment-delivery span,
 .container .wrapper-progress .finish-delivery span {
+  box-shadow: 0 2px 4px 0 rgba(255,138,0,0.30);
+  border-radius: 50%;
+  font-family: Helvetica;
+  font-size: 16px;
+  letter-spacing: 0;
+  text-align: center;
+  padding: 4px 8px;
+}
 
-background: #FF8A00;
-box-shadow: 0 2px 4px 0 rgba(255,138,0,0.30);
-border-radius: 50%;
-font-family: Helvetica;
-font-size: 16px;
-color: #FF8A00;
-letter-spacing: 0;
-color: #FFFFFF;
-text-align: center;
-padding: 4px 8px;
+.container .wrapper-progress .payment-delivery span,
+.container .wrapper-progress .finish-delivery span {
+  background-color: #FFFAE6;
+  color: #FF8A00;
+}
+
+.container .wrapper-progress .progress-delivery span {
+  background-color: #FF8A00;
+  color: #FFFFFF;
 }
 
 .row {

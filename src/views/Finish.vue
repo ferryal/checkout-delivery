@@ -13,8 +13,8 @@
                             <h1 class="flex-item">Thank you</h1>
                         </div>
                         <div class="f-bold"><p>Order ID: {{$data.code}}</p></div>
-                        <div class="m-top-5 m-bottom-30">Your order will be delivered today with GO-SEND</div>
-                        <div class="c-pointer"><i class="fa fa-angle-left m-right-15" aria-hidden="true" /><span>Go to Homepage</span></div>
+                        <div class="m-top-5 m-bottom-30">Your order will be delivered {{summary.estimation}} with {{summary.delivery}}</div>
+                        <div class="c-pointer"><i class="fa fa-angle-left m-right-15" aria-hidden="true" @click="redirectHome" /><span @click="redirectHome">Go to Homepage</span></div>
                     </div>
                 </div>
             </div>
@@ -24,25 +24,25 @@
                 <div class="wrapper-info">
                     <div class="list" />
                     <p class="mb-0">Delivery Estimation</p>
-                    <p class="color-green">today by GO-SEND</p>
+                    <p class="color-green">{{summary.estimation}} by {{summary.delivery}}</p>
                 </div>
                 <div class="wrapper-info">
                     <div class="list" />
                     <p class="mb-0">Payment method</p>
-                    <p class="color-green">Bank Transfer</p>
+                    <p class="color-green">{{summary.payment}}</p>
                 </div>
                 <div class="summary">
                     <div class="d-flex h-25">
-                        <p>Cost of goods</p><p class="f-bold">500,000</p>
+                        <p>Cost of goods</p><p class="f-bold">{{detail.cost}}</p>
                     </div>
                     <div class="d-flex h-25">
-                        <p>Dropshipping Fee</p><p class="f-bold">5,900</p>
+                        <p>Dropshipping Fee</p><p class="f-bold">{{detail.fee}}</p>
                     </div>
                     <div class="d-flex h-25">
-                        <p>GO-SEND shipment</p><p class="f-bold">5,900</p>
+                        <p>{{summary.delivery}} shipment</p><p class="f-bold">{{summary.deliveryFee}}</p>
                     </div>
                     <div class="d-flex summary-total">
-                        <p>Total</p><p>505,900</p>
+                        <p>Total</p><p>{{summary.totalAmount}}</p>
                     </div>
                 </div>
             </div>
@@ -51,14 +51,33 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex'
+
+const namespaced = true
 export default {
-  name: 'HelloWorld',
+  namespaced,
+  name: 'Finish',
   props: {
     msg: String
   },
+  computed: {
+    ...mapState({
+      summary: 'summary',
+      detail: 'checkoutDetail'
+    }),
+    ...mapGetters({
+      summary: 'summary',
+      detail: 'checkoutDetail'
+    })
+  },
   data: () => ({
     code: Math.random().toString(36).substr(2, 5).toUpperCase()
-  })
+  }),
+  methods: {
+    redirectHome: function () {
+      this.$router.push('/')
+    }
+  }
 
 }
 </script>
@@ -69,7 +88,7 @@ export default {
   padding: 2rem;
   height: auto;
   max-width: 86%;
-  margin-top: 30px;
+  margin-top: 50px;
   margin-left: 60px;
   background-color: #ffffff;
   border-radius: 7px;
