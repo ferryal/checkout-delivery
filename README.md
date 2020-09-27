@@ -15,7 +15,7 @@
 ```
 npm run dev
 ```
-# serve with hot reload at localhost:8080
+#### serve with hot reload at localhost:8080
 
 
 ### Setup Development Mode
@@ -29,7 +29,7 @@ npm start / yarn start
 ```
 npm run build
 ```
-# build for production with minification
+#### build for production with minification
 
 
 ### Live Demo
