@@ -75,7 +75,7 @@ export default {
   }),
   methods: {
     redirectHome: function () {
-      this.$router.push('/')
+      window.location = '/'
     }
   }
 

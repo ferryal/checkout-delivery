@@ -80,7 +80,7 @@ export default {
       dropshiperPhone: '',
       items: 10,
       cost: 500000,
-      fee: '0'
+      fee: 0
     },
     payload: {}
   }),
@@ -100,7 +100,7 @@ export default {
       if (name === 'check-box') {
         if (checked === true) {
           this.user.fee = 5900
-          this.user.cost = 509500
+          this.user.cost = 505900
         } else {
           this.user.fee = 0
           this.user.cost = 500000
@@ -113,11 +113,6 @@ export default {
       }
       const emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/
       const phoneRegex = /^(^\+62|62|^08)(\d{3,4}-?){2}\d{3,4}$/
-
-      if (this.isChecked === true && phoneRegex.test(this.user.phone)) {
-        alert('Submit error')
-      }
-
       if (emailRegex.test(this.user.email) && phoneRegex.test(this.user.phone)) {
         this.$store.commit('addProduct', payload)
         this.$router.push('Payment')
